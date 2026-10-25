@@ -1,0 +1,3 @@
+
+
+{"flutter":{"platforms":{"android":{"default":{"projectId":"campus-reporting-app","appId":"1:772136149424:android:a94d5897ad02072f303675","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"campus-reporting-app","configurations":{"android":"1:772136149424:android:a94d5897ad02072f303675","ios":"1:772136149424:ios:01d9b6aa190a454d303675","macos":"1:772136149424:ios:01d9b6aa190a454d303675","web":"1:772136149424:web:7ac0f5ffb43df553303675","windows":"1:772136149424:web:7932a2cc54f687cc303675"}}}}}}
