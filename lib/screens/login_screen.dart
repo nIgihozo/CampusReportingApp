@@ -13,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  String _selectRole = 'Student'; // Default selected role
 
   @override
   Widget build(BuildContext context) {
@@ -38,22 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              initialValue: _selectRole,
-              items: ['Student', 'Faculty', 'Admin']
-                  .map((role) => DropdownMenuItem(
-                        value: role,
-                        child: Text(role),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectRole = value!;
-                });
-              },
-              decoration: const InputDecoration(labelText: 'Select Role'),
-            ),
-            const SizedBox(height: 16),
+            
             ElevatedButton(
               onPressed: () {
                 // Handle login logic here
