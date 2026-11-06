@@ -50,6 +50,18 @@ class AuthService {
             return null;
         } on FirebaseAuthException catch (e) {
             return e.message;
+        } 
+    }
+
+    // Reset Password
+    Future<String?> resetPassword(String email) async {
+        try {
+            await _auth.sendPasswordResetEmail(email: email);
+            return null;
+        } on FirebaseAuthException catch (e) {
+            return e.message;
+        } catch (e) {
+            return e.toString();
         }
     }
 }
