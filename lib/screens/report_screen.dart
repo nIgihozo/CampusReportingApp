@@ -1,9 +1,10 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ReportIncidentScreen extends StatefulWidget {
   const ReportIncidentScreen({super.key});
@@ -22,62 +23,78 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
 
   final List<String> _categories = ['Facilities', 'Water', 'Electricity', 'Safety', 'Sanitation'];
 
+  // Image Compression Helper Method
+  Future<File?> _compressImage(File file) async {
+    final filePath = file.absolute.path;
+    final lastIndex = filePath.lastIndexOf(RegExp(r'\.'));
+    if (lastIndex == -1) return file;
+    final splitted = filePath.substring(0, lastIndex);
+    final targetPath = "${splitted}_compressed.jpg";
+
+    var result = await FlutterImageCompress.compressAndGetFile(
+      filePath,
+      targetPath,
+      quality: 70, // Compresses image quality down
+    );
+
+    return result != null ? File(result.path) : file;
+  }
+
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() => _imageFile = File(pickedFile.path));
+      File originalFile = File(pickedFile.path);
+      File? compressedFile = await _compressImage(originalFile); // Compress image here
+      setState(() => _imageFile = compressedFile ?? originalFile);
     }
   }
 
-  Future<void> _submitReport() async {
-    if (_titleController.text.trim().isEmpty || _locationController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in title and location')),
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      String imageUrl = '';
-      
-      // 1. Upload image to Firebase Storage if selected
-      if (_imageFile != null) {
-        String fileName = 'incidents/${DateTime.now().millisecondsSinceEpoch}.jpg';
-        Reference ref = FirebaseStorage.instance.ref().child(fileName);
-        UploadTask uploadTask = ref.putFile(_imageFile!);
-        TaskSnapshot snapshot = await uploadTask;
-        imageUrl = await snapshot.ref.getDownloadURL();
-      }
-
-      // 2. Save report to Cloud Firestore
-      User? user = FirebaseAuth.instance.currentUser;
-      await FirebaseFirestore.instance.collection('incidents').add({
-        'userId': user?.uid ?? 'anonymous',
-        'userEmail': user?.email ?? 'unknown',
-        'category': _selectedCategory,
-        'title': _titleController.text.trim(),
-        'description': _descController.text.trim(),
-        'location': _locationController.text.trim(),
-        'imageUrl': imageUrl,
-        'status': 'Submitted', // Submitted, In Progress, Resolved
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Report submitted successfully!')),
-      );
-      Navigator.pop(context);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
+ Future<void> _submitReport() async {
+  if (_titleController.text.trim().isEmpty || _locationController.text.trim().isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please fill in title and location')),
+    );
+    return;
   }
+
+  setState(() => _isLoading = true);
+
+  try {
+    String base64Image = '';
+    
+    // Convert image file to Base64 string if selected
+    if (_imageFile != null) {
+      List<int> imageBytes = await _imageFile!.readAsBytes();
+      base64Image = base64Encode(imageBytes);
+    }
+
+    // Save report + image string directly to Cloud Firestore 
+    User? user = FirebaseAuth.instance.currentUser;
+    await FirebaseFirestore.instance.collection('incidents').add({
+      'userId': user?.uid ?? 'anonymous',
+      'userEmail': user?.email ?? 'unknown',
+      'category': _selectedCategory,
+      'title': _titleController.text.trim(),
+      'description': _descController.text.trim(),
+      'location': _locationController.text.trim(),
+      'imageBase64': base64Image, // Stores image as text safely 
+      'status': 'Submitted',
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Report submitted successfully!')),
+    );
+    Navigator.pop(context);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error: $e')),
+    );
+  } finally {
+    if (mounted) setState(() => _isLoading = false);
+  }
+}
 
   @override
   Widget build(BuildContext context) {
