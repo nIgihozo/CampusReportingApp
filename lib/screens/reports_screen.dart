@@ -58,7 +58,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       children: [
                         Row(
                           children: [
-                            const Text('Amina Hassan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            const Text('Nyiramanzi Igihozo', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -68,7 +68,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ],
                         ),
                         const SizedBox(height: 2),
-                        const Text('Computer Science', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                        const Text('BSE', style: TextStyle(color: Colors.grey, fontSize: 12)),
                         const SizedBox(height: 2),
                         const Text('Kigali, Rwanda', style: TextStyle(color: Colors.grey, fontSize: 12)),
                       ],
@@ -104,7 +104,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 stream: FirebaseFirestore.instance
                     .collection('incidents')
                     .where('userId', isEqualTo: currentUser?.uid ?? 'anonymous')
-                    .orderBy('createdAt', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
