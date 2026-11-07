@@ -39,7 +39,7 @@ A few resources to get you started if this is your first Flutter project:
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/your-username/campus-reporting-app.git](https://github.com/your-username/campus-reporting-app.git)
+   git clone https://github.com/nIgihozo/CampusReportingApp.git
    cd campus-reporting-app
 
 ----
