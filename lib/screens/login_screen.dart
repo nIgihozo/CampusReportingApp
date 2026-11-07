@@ -20,6 +20,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Handle Login
   void _handleLogin() async {
+    // Frontend validation
+    if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields.')),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
     String? err = await _authService.signIn(
       _emailController.text.trim(),
@@ -51,7 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
     String? err = await _authService.resetPassword(email);
     if (!mounted) return;
     
-    // SnackBar Message To Inform User About Password Reset Link Sent or Error
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(err ?? 'Password reset link sent to your email!')),
     );
@@ -76,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             TextField(
               controller: _passwordController,
-              obscureText: _obscurePassword, // Controlled by toggle state
+              obscureText: _obscurePassword,
               decoration: InputDecoration(
                 labelText: 'Password',
                 suffixIcon: IconButton(
