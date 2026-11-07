@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'report_screen.dart';
+import 'reports_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -128,13 +129,18 @@ class HomeScreen extends StatelessWidget {
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
-          if (index == 2) { // Index of the Report button item
+          if (index == 1) { // Reports Tab button
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ReportIncidentScreen()),
+            MaterialPageRoute(builder: (context) => const ReportsScreen()),
             );
-            }
-            },
+            } else if (index == 2) { // Report Incident button (+)
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReportIncidentScreen()),
+              );
+              }
+              },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.assignment_outlined), label: 'Reports'),
