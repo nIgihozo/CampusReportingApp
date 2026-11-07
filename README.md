@@ -63,6 +63,7 @@ flutter run
 ----
 
 ## PROJECT STRUCTURE
+```bash
 lib/
 │
 ├── service/          # Authentication & database backend handlers (auth_service.dart)
@@ -77,13 +78,14 @@ lib/
 │   └── staff_screen.dart        # Authorized staff/admin management dashboard
 │
 └── main.dart         # App entry point & initialization
+```
 
 ---
 
 ## Security & Validation Highlights
-**Client-Side Validation:** Immediate local checks for empty fields, proper email formatting (@), and strict password length requirements (>= 6 characters) before triggering network requests.
-**Secret Provisioning:** Administrative registration requires a verified access code loaded securely via environment variables (flutter_dotenv), preventing hardcoded credentials in source control.
-**Conditional UI Routing:** Secure server-side and client-side checks ensure administrative features and dashboard links are hidden from regular student accounts.
+- **Client-Side Validation:** Immediate local checks for empty fields, proper email formatting (@), and strict password length requirements (>= 6 characters) before triggering network requests.
+- **Secret Provisioning:** Administrative registration requires a verified access code loaded securely via environment variables (flutter_dotenv), preventing hardcoded credentials in source control.
+- **Conditional UI Routing:** Secure server-side and client-side checks ensure administrative features and dashboard links are hidden from regular student accounts.
 
 ----
 
