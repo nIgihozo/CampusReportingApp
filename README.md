@@ -42,3 +42,50 @@ A few resources to get you started if this is your first Flutter project:
    git clone [https://github.com/your-username/campus-reporting-app.git](https://github.com/your-username/campus-reporting-app.git)
    cd campus-reporting-app
 
+----
+2. **Install Dependency**
+```bash
+flutter pub get
+```
+----
+3. **Configure Environment Variables:**
+
+- Create a .env file in the root directory.
+
+- Add your secure  access key and.
+
+----
+4. **Run Application**
+```bash
+flutter run
+```
+
+----
+
+## PROJECT STRUCTURE
+lib/
+│
+├── service/          # Authentication & database backend handlers (auth_service.dart)
+├── screens/          # Core application views
+│   ├── login_screen.dart        # Secure login with frontend validation
+│   ├── signup_screen.dart       # Role selection & signup logic
+│   ├── home_screen.dart         # Dynamic dashboard & role-based header check
+│   ├── report_screen.dart       # New incident creation workflow
+│   ├── reports_screen.dart      # Full user report listings
+│   ├── incident_details_screen.dart # Detailed incident view
+│   ├── profile_screen.dart      # User profile management
+│   └── staff_screen.dart        # Authorized staff/admin management dashboard
+│
+└── main.dart         # App entry point & initialization
+
+---
+
+## Security & Validation Highlights
+**Client-Side Validation:** Immediate local checks for empty fields, proper email formatting (@), and strict password length requirements (>= 6 characters) before triggering network requests.
+**Secret Provisioning:** Administrative registration requires a verified access code loaded securely via environment variables (flutter_dotenv), preventing hardcoded credentials in source control.
+**Conditional UI Routing:** Secure server-side and client-side checks ensure administrative features and dashboard links are hidden from regular student accounts.
+
+----
+
+## License
+Developed for academic submission and campus safety enhancement.
