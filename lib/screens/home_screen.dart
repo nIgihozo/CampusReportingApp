@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'report_screen.dart';
 import 'reports_screen.dart';
 import 'incident_details_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -44,20 +45,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Hello, Igihozo', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                          SizedBox(height: 2),
-                          Text('Help make our campus safer', style: TextStyle(fontSize: 16, color: Colors.black)),
-                          Text('Report issues and track their resolution', style: TextStyle(fontSize: 14, color: Colors.grey)),
-                        ],
-                      ),
-                      IconButton(
-                        icon: const Badge(label: Text('1'), child: Icon(Icons.notifications)),
-                        onPressed: () {},
-                      ),
-                    ],
+                      Builder(
+                      builder: (context) {
+                        final currentUser = FirebaseAuth.instance.currentUser;
+                        String displayName = currentUser?.displayName ?? currentUser?.email?.split('@').first ?? 'Student';
+                        
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Hello, $displayName', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 2),
+                            const Text('Help make our campus safer', style: TextStyle(fontSize: 16, color: Colors.black)),
+                            const Text('Report issues and track their resolution', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                          ],
+                        );
+                      },
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Badge(label: Text('1'), child: Icon(Icons.notifications)),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(width: 8),
+                        const CircleAvatar(
+                          backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
+                        ),
+                      ],
+                    ),
+                  ],
                   ),
                   const SizedBox(height: 20),
 
@@ -194,6 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (index) {
           if (index == 1) Navigator.push(context, MaterialPageRoute(builder: (_) => const ReportsScreen()));
           if (index == 2) Navigator.push(context, MaterialPageRoute(builder: (_) => const ReportIncidentScreen()));
+          if (index == 3) Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

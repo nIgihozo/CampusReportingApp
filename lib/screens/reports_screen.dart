@@ -17,6 +17,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
+    String displayName = currentUser?.displayName ?? currentUser?.email?.split('@').first ?? 'Student';
+    String displayEmail = currentUser?.email ?? 'student@alu.edu.rw';
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -37,46 +39,46 @@ class _ReportsScreenState extends State<ReportsScreen> {
             ),
 
             // Profile Summary Card
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 26,
-                    backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Text('Nyiramanzi Igihozo', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                              decoration: BoxDecoration(color: Colors.purple.shade50, borderRadius: BorderRadius.circular(10)),
-                              child: const Text('Student', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 10, fontWeight: FontWeight.bold)),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 2),
-                        const Text('BSE', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                        const SizedBox(height: 2),
-                        const Text('Kigali, Rwanda', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+        Container(
+  margin: const EdgeInsets.symmetric(horizontal: 16),
+  padding: const EdgeInsets.all(14),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(16),
+    border: Border.all(color: Colors.grey.shade200),
+  ),
+  child: Row(
+    children: [
+      const CircleAvatar(
+        radius: 26,
+        backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
+      ),
+      const SizedBox(width: 12),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(displayName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(color: Colors.purple.shade50, borderRadius: BorderRadius.circular(10)),
+                  child: const Text('Student', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 10, fontWeight: FontWeight.bold)),
+                ),
+              ],
             ),
+            const SizedBox(height: 2),
+            Text(displayEmail, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            const SizedBox(height: 2),
+            const Text('Kigali, Rwanda', style: TextStyle(color: Colors.grey, fontSize: 12)),
+          ],
+        ),
+      ),
+    ],
+  ),
+),
             const SizedBox(height: 16),
 
             // Filter Chips (All, Submitted, In Progress, Resolved)
