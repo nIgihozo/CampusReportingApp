@@ -6,6 +6,7 @@ import 'report_screen.dart';
 import 'reports_screen.dart';
 import 'incident_details_screen.dart';
 import 'profile_screen.dart';
+import 'staff_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,34 +47,62 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Builder(
-                      builder: (context) {
-                        final currentUser = FirebaseAuth.instance.currentUser;
-                        String displayName = currentUser?.displayName ?? currentUser?.email?.split('@').first ?? 'Student';
-                        
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Hello, $displayName', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 2),
-                            const Text('Help make our campus safer', style: TextStyle(fontSize: 16, color: Colors.black)),
-                            const Text('Report issues and track their resolution', style: TextStyle(fontSize: 14, color: Colors.grey)),
-                          ],
-                        );
-                      },
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Badge(label: Text('1'), child: Icon(Icons.notifications)),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(width: 8),
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
-                        ),
-                      ],
-                    ),
-                  ],
+                        builder: (context) {
+                          final currentUser = FirebaseAuth.instance.currentUser;
+                          String displayName = currentUser?.displayName ?? currentUser?.email?.split('@').first ?? 'Student';
+                          
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Hello, $displayName', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 2),
+                              const Text('Help make our campus safer', style: TextStyle(fontSize: 16, color: Colors.black)),
+                              const Text('Report issues and track their resolution', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                            ],
+                          );
+                        },
+                      ),
+                      Row(
+                        children: [
+                          // Secure Staff Dashboard Check (Only visible if role == Admin or Faculty)
+                          FutureBuilder<DocumentSnapshot>(
+                            key: ValueKey(currentUser?.uid),
+                            future: FirebaseFirestore.instance.collection('users').doc(currentUser?.uid).get(),
+                            builder: (context, userSnapshot) {
+                              if (userSnapshot.hasData && userSnapshot.data!.exists) {
+                                final userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                                final role = userData['role'] ?? 'Student';
+
+                                if (role == 'Admin' || role == 'Faculty') {
+                                  return Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.admin_panel_settings, color: Color(0xFF7C3AED)),
+                                        tooltip: 'Staff Dashboard',
+                                        onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (_) => const StaffDashboardScreen()),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                    ],
+                                  );
+                                }
+                              }
+                              return const SizedBox.shrink(); // Hidden for regular students
+                            },
+                          ),
+                          IconButton(
+                            icon: const Badge(label: Text('1'), child: Icon(Icons.notifications)),
+                            onPressed: () {},
+                          ),
+                          const SizedBox(width: 8),
+                          const CircleAvatar(
+                            backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
 
@@ -152,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: docs.length > 3 ? 3 : docs.length, // Show up to 3 recent items
+                          itemCount: docs.length > 3 ? 3 : docs.length,
                           itemBuilder: (context, index) {
                             var doc = docs[index];
                             var data = doc.data() as Map<String, dynamic>;
