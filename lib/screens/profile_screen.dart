@@ -13,7 +13,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
 
   // Edit Name Dialog
-  // Edit Name Dialog
   void _editNameDialog() {
     final nameController = TextEditingController(text: user?.displayName ?? '');
     showDialog(
@@ -39,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 if (!mounted) return;
                 setState(() {});
                 
-                Navigator.pop(dialogContext); // Close dialog safely using dialogContext
+                Navigator.pop(dialogContext); // Closing dialog safely
                 
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(

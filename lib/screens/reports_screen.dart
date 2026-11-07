@@ -40,28 +40,28 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
             // Profile Summary Card
         Container(
-  margin: const EdgeInsets.symmetric(horizontal: 16),
-  padding: const EdgeInsets.all(14),
-  decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(16),
-    border: Border.all(color: Colors.grey.shade200),
-  ),
-  child: Row(
-    children: [
-      const CircleAvatar(
-        radius: 26,
-        backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
-      ),
-      const SizedBox(width: 12),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Row(
               children: [
-                Text(displayName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                const SizedBox(width: 8),
+                const CircleAvatar(
+                  radius: 26,
+                  backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(displayName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(color: Colors.purple.shade50, borderRadius: BorderRadius.circular(10)),
