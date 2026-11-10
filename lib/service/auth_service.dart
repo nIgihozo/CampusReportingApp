@@ -14,8 +14,8 @@ class AuthService {
         required String password,
         String? extraDetail,
     }) async {
-        if (!email.endsWith('@alustudent.com')) {
-            return 'Must use student ALU emails for you to be able to continue with creating account on this app.';
+        if (!email.endsWith('@alustudent.com') && !email.endsWith('@alueducation.com')) {
+            return 'Must use student or faculty ALU emails for you to be able to continue with creating account on this app.';
         }
 
         try {

@@ -42,6 +42,15 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
+     // Email Restiction Validation
+    String email = _emailCtrl.text.trim().toLowerCase();
+    if (email.endsWith('@alustudent.com') && !email.endsWith('@alueducation.com')) {
+      ScaffoldMessenger.of(context).showSnackBar (
+        const SnackBar(content: Text('Only an ALU Student and ALU Education are allowed on this app!')),
+      );
+      return;
+    }
+
     // 3. Password Length Validation
     if (_passCtrl.text.trim().length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
