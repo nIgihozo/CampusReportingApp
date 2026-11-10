@@ -103,7 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
           children: [
             DropdownButtonFormField<String>(
               initialValue: _role,
-              items: ['Student', 'Faculty', 'Admin']
+              items: ['Student', 'Staff']
                   .map((r) => DropdownMenuItem(value: r, child: Text(r)))
                   .toList(),
               onChanged: (val) => setState(() {
@@ -118,7 +118,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: _extraCtrl,
                 decoration: const InputDecoration(labelText: 'Student ID'),
               ),
-            ] else if (_role == 'Faculty') ...[
+            ] else if (_role == 'Staff') ...[
               TextField(
                 controller: _extraCtrl,
                 decoration: const InputDecoration(labelText: 'Department Name'),

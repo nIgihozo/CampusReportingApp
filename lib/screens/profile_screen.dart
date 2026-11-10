@@ -91,7 +91,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     String displayName = user?.displayName ?? user?.email?.split('@').first ?? 'Student';
-    String displayEmail = user?.email ?? 'student@alu.edu.rw';
+    String displayEmail = user?.email ?? 'student@alustudent.com';
+
+    String roleBased = 'Student';
+    if(displayEmail.toLowerCase().endsWith('@alueducation.com')) {
+      roleBased= 'Staff';
+    } else if (displayEmail.toLowerCase().endsWith('@alustudent.com')) {
+      roleBased = 'Student';
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -126,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(color: Colors.purple.shade50, borderRadius: BorderRadius.circular(12)),
-              child: const Text('Student Role', style: TextStyle(color: Color(0xFF7C3AED), fontWeight: FontWeight.bold, fontSize: 12)),
+              child: Text(roleBased, style: const TextStyle(color: Color(0xFF7C3AED), fontWeight: FontWeight.bold, fontSize: 12)),
             ),
             const SizedBox(height: 24),
             
@@ -134,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildActionTile(Icons.school, 'Department', 'BSE', onTap: () {}),
             _buildActionTile(Icons.location_on, 'Campus Location', 'Kigali, Rwanda', onTap: () {}),
             _buildActionTile(Icons.lock_outline, 'Change Password', 'Update via email', onTap: _changePassword),
-            _buildActionTile(Icons.support_agent, 'Help & Support', 'Contact admin', onTap: _showSupportDialog),
+            _buildActionTile(Icons.support_agent, 'Help & Support', 'Contact Support Team', onTap: _showSupportDialog),
             const SizedBox(height: 20),
 
             SizedBox(
