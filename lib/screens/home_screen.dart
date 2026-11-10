@@ -49,7 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Builder(
                         builder: (context) {
                           final currentUser = FirebaseAuth.instance.currentUser;
-                          String displayName = currentUser?.displayName ?? currentUser?.email?.split('@').first ?? 'Student';
+                          String fullName = currentUser?.displayName ?? currentUser?.email?.split('@').first ?? 'Student';
+                          String displayName = fullName.split(' ').first;
                           
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
