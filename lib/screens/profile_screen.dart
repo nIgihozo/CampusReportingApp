@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -79,8 +80,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Campus Support'),
-        content: const Text('For technical issues or emergency campus reporting support, please contact the IT Administration office at support@alu.edu.rw or call ext. 404.'),
+        title: const Text('Campus Support Contact'),
+        content: const Text('For technical issues or emergency campus reporting support, please contact the tech team at Support email through your student portal or call your respective campus helpline.'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Close')),
         ],
@@ -94,8 +95,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String displayEmail = user?.email ?? 'student@alustudent.com';
 
     String roleBased = 'Student';
-    if(displayEmail.toLowerCase().endsWith('@alueducation.com')) {
-      roleBased= 'Staff';
+    if (displayEmail.toLowerCase().endsWith('@alueducation.com')) {
+      roleBased = 'Faculty';
     } else if (displayEmail.toLowerCase().endsWith('@alustudent.com')) {
       roleBased = 'Student';
     }
@@ -108,67 +109,79 @@ class _ProfileScreenState extends State<ProfileScreen> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const CircleAvatar(
-              radius: 45,
-              backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance.collection('users').doc(user?.uid).get(),
+        builder: (context, snapshot) {
+          String extraDetailValue = roleBased == 'Faculty' ? 'Department Name' : 'Student ID';
+          
+          if (snapshot.hasData && snapshot.data!.exists) {
+            var userData = snapshot.data!.data() as Map<String, dynamic>;
+            extraDetailValue = userData['extraDetail'] ?? extraDetailValue;
+          }
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
               children: [
-                Text(displayName, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                IconButton(
-                  icon: const Icon(Icons.edit, size: 18, color: Color(0xFF7C3AED)),
-                  onPressed: _editNameDialog,
+                const CircleAvatar(
+                  radius: 45,
+                  backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(displayName, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 18, color: Color(0xFF7C3AED)),
+                      onPressed: _editNameDialog,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(displayEmail, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(color: Colors.purple.shade50, borderRadius: BorderRadius.circular(12)),
+                  child: Text(roleBased, style: const TextStyle(color: Color(0xFF7C3AED), fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
+                const SizedBox(height: 24),
+                
+                // Settings & Interactive Options (Dynamically showing Firestore Data)
+                _buildActionTile(Icons.school, roleBased == 'Faculty' ? 'Department' : 'Student ID', extraDetailValue, onTap: () {}),
+                _buildActionTile(Icons.location_on, 'Campus Location', 'Kigali, Rwanda', onTap: () {}),
+                _buildActionTile(Icons.lock_outline, 'Change Password', 'Update via email', onTap: _changePassword),
+                _buildActionTile(Icons.support_agent, 'Help & Support', 'Contact Support Team', onTap: _showSupportDialog),
+                const SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade50,
+                      foregroundColor: Colors.red,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    icon: const Icon(Icons.logout),
+                    label: const Text('Log Out', style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () async {
+                      await FirebaseAuth.instance.signOut();
+                      if (!context.mounted) return;
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                        (route) => false,
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 2),
-            Text(displayEmail, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(color: Colors.purple.shade50, borderRadius: BorderRadius.circular(12)),
-              child: Text(roleBased, style: const TextStyle(color: Color(0xFF7C3AED), fontWeight: FontWeight.bold, fontSize: 12)),
-            ),
-            const SizedBox(height: 24),
-            
-            // Settings & Interactive Options
-            _buildActionTile(Icons.school, 'Department', 'BSE', onTap: () {}),
-            _buildActionTile(Icons.location_on, 'Campus Location', 'Kigali, Rwanda', onTap: () {}),
-            _buildActionTile(Icons.lock_outline, 'Change Password', 'Update via email', onTap: _changePassword),
-            _buildActionTile(Icons.support_agent, 'Help & Support', 'Contact Support Team', onTap: _showSupportDialog),
-            const SizedBox(height: 20),
-
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red.shade50,
-                  foregroundColor: Colors.red,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                icon: const Icon(Icons.logout),
-                label: const Text('Log Out', style: TextStyle(fontWeight: FontWeight.bold)),
-                onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
-                  if (!context.mounted) return;
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
-                    (route) => false,
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
