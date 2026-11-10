@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 final userData = userSnapshot.data!.data() as Map<String, dynamic>;
                                 final role = userData['role'] ?? 'Student';
 
-                                if (role == 'Admin' || role == 'Faculty') {
+                                if (role == 'Staff') {
                                   return Row(
                                     children: [
                                       IconButton(
@@ -99,7 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(width: 8),
                           const CircleAvatar(
-                            backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
+                            backgroundColor: Colors.purple,
+                            child: Icon(Icons.person, color: Colors.white),
                           ),
                         ],
                       ),

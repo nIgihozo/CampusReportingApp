@@ -14,13 +14,14 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   final _nameCtrl = TextEditingController();
+  final _staffCodeCtrl = TextEditingController();
   final _extraCtrl = TextEditingController();
   String _role = 'Student';
   bool _isLoading = false;
   final _authService = AuthService();
 
   //  Administrative account registration
-  static const String _secretAdminCode = 'ADMIN123';
+  static const String _secretStaffCode = 'Staff123';
 
   void _handleSignUp() async {
     // 1. Frontend Empty Field Validation
@@ -59,10 +60,10 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    // 4. Admin Access Code Validation
-    if (_role == 'Admin' && _extraCtrl.text.trim() != _secretAdminCode) {
+    // 4. Staff Access Code Validation
+    if (_role == 'Staff' && _staffCodeCtrl.text.trim() != _secretStaffCode) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid Admin Access Code.')),
+        const SnackBar(content: Text('Invalid Staff Access Code.')),
       );
       return;
     }
@@ -121,14 +122,14 @@ class _SignupScreenState extends State<SignupScreen> {
             ] else if (_role == 'Staff') ...[
               TextField(
                 controller: _extraCtrl,
-                decoration: const InputDecoration(labelText: 'Department Name'),
+                decoration: const InputDecoration(labelText: 'Department'),
               ),
-            ] else if (_role == 'Admin') ...[
+              const SizedBox(height: 12),
               TextField(
-                controller: _extraCtrl,
-                decoration: const InputDecoration(labelText: 'Admin Access Code'),
+                controller: _staffCodeCtrl,
+                decoration: const InputDecoration(labelText: 'Staff Access Code'),
                 obscureText: true,
-              ),
+              )
             ],
             const SizedBox(height: 24),
             TextField(

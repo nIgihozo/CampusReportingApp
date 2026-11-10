@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'incident_details_screen.dart';
 
+
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
 
@@ -17,8 +18,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
-    String displayName = currentUser?.displayName ?? currentUser?.email?.split('@').first ?? 'Student';
-    String displayEmail = currentUser?.email ?? 'student@alu.edu.rw';
+    String displayName = currentUser?.displayName ?? currentUser?.email?.split('@').first ?? 'role';
+    String displayEmail = currentUser?.email ?? 'student@alustudent.com';
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -51,7 +52,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
               children: [
                 const CircleAvatar(
                   radius: 26,
-                  backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
+                  backgroundColor: Colors.purple,
+                  child: Icon(Icons.person, color: Colors.white),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -65,7 +67,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(color: Colors.purple.shade50, borderRadius: BorderRadius.circular(10)),
-                  child: const Text('Student', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 10, fontWeight: FontWeight.bold)),
+                  child: const Text('role', style: TextStyle(color: Color(0xFF7C3AED), fontSize: 10, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

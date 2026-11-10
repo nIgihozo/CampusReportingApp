@@ -125,7 +125,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 const CircleAvatar(
                   radius: 45,
-                  backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
+                  backgroundColor: Colors.purple,
+                  child: Icon(Icons.person, color: Colors.white),
                 ),
                 const SizedBox(height: 12),
                 Row(
